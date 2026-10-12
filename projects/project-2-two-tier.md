@@ -278,13 +278,53 @@ aws ec2 authorize-security-group-ingress --group-id $DBSG --protocol tcp --port 
 
 Other things that give the same symptom: a wrong host name, user, password or database name in `env-variables`, or a database in a different VPC. Check those if the rule is already in place.
 
-I diagnosed this on a real failed environment. The rule command is the same one tested in step 2. I did not rebuild that environment to confirm it recovers.
+We saw this on a real failed environment. After the rule was added, the `Target.Timeout` warnings stopped and the environment moved on to a different error, the one in the next section. That confirms the rule fixed the connection.
+
+## The launch fails with ResponseCodeMismatch 500
+
+**What you see.** The warning changes to this, and the environment still does not turn Green:
+
+```
+... is in state='unhealthy' due to reason='Target.ResponseCodeMismatch' description='Health checks failed with these codes: [500]'
+```
+
+**Why.** The app is now reachable and the load balancer gets an answer, but the answer is an error. The app is failing on the database itself: a wrong host, user, password or database name.
+
+**Find the real error.** Cluster Mode sends the app's output to CloudWatch Logs. Open the newest stream for your environment and read the last lines:
+
+```bash
+aws logs describe-log-streams --log-group-name /aws/elasticbeanstalk/application/logs \
+  --order-by LastEventTime --descending --max-items 5 \
+  --query 'logStreams[].logStreamName' --output text
+
+aws logs get-log-events --log-group-name /aws/elasticbeanstalk/application/logs \
+  --log-stream-name <stream-for-your-environment> --limit 40 \
+  --query 'events[].message' --output text
+```
+
+Stream names start with `eb-<your-environment>`. In the console, open **CloudWatch**, then **Log groups**, then `/aws/elasticbeanstalk/application/logs`.
+
+**The one we saw.** The last line was `pymysql.err.OperationalError: (1049, "Unknown database 'devops'")`. The connection and login worked, so the network was fine, but the database instance had been created without an initial database. Step 1 avoids this with `--db-name devops`. RDS cannot add an initial database name afterwards, so connect to the instance from a machine inside the VPC and create it:
+
+```sql
+CREATE DATABASE devops;
+```
+
+Other messages and what they mean:
+
+| Message | Meaning |
+|---------|---------|
+| `(1045, "Access denied for user ...")` | Wrong user or password in `env-variables` |
+| `(2003, "Can't connect to MySQL server ...")` or a long hang | Network or security group, see the section above |
+| `(2005, "Unknown MySQL server host ...")` | Wrong `MYSQL_HOST` |
+| `(1049, "Unknown database ...")` | The database does not exist on the instance |
 
 ## Common problems
 
 - `t3.micro` hangs on the MySQL plus Flask compose file. Use `t3.small`.
 - On Cluster Mode the service port must be 5000.
 - The RDS security group must allow the environment's security group on port 3306. If it does not, the launch fails with `Target.Timeout` ([details](#the-launch-fails-with-targettimeout)).
+- Create the database with `--db-name devops` in step 1. Without it the app returns 500 and the log says `Unknown database` ([details](#the-launch-fails-with-responsecodemismatch-500)).
 - Use one `env-variables` JSON option on Cluster Mode, not one option per variable.
 - Never commit a real database password. The compose file's `change-me-...` values are placeholders.
 - On zsh (the macOS default), an unquoted `$SUBNETS` made up of several lines is not split into words. Pass it as JSON in quotes, as in step 1.
