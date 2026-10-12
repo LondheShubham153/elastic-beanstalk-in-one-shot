@@ -36,7 +36,7 @@ Use a **`t3.small`** or larger. On a `t3.micro` the instance stopped responding 
 
 ### 2. Run it
 
-**Console.** Create environment, Standard, platform Docker (Amazon Linux 2023), Local file `docker-compose.yml`, service role `aws-elasticbeanstalk-service-role` and instance profile `aws-elasticbeanstalk-ec2-role`. Under capacity, choose instance type `t3.small`. The console steps were not hand-clicked for this guide.
+**Console.** Create environment, Standard, platform Docker (Amazon Linux 2023), Local file `docker-compose.yml`, service role `aws-elasticbeanstalk-service-role` and instance profile `aws-elasticbeanstalk-ec2-role`. Open **Infrastructure** and choose instance type `t3.small`. The wizard is the one shown in [Project 1](project-1-single-tier.md#run-it-with-the-console). I did not click through it for this guide.
 
 **EB CLI.** The shortest route. Install the EB CLI as shown in [setup step 5](../setup/README.md#5-install-the-eb-cli). Tested with EB CLI 3.27.3 in `us-west-2`.
 

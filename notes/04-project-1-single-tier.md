@@ -8,7 +8,7 @@ Step-by-step: [projects/project-1-single-tier.md](../projects/project-1-single-t
 
 1. Look at the one-file `beanstalk/docker-compose.yml` (the image and the port).
 2. Create a Standard Mode environment on the Docker platform, uploading that file.
-3. Pick the two roles from chapter 3 on the Service access step.
+3. On the Service access step, pick the two roles from chapter 3 (**Use another role**).
 4. Accept the defaults and create the environment.
 5. Watch the Events tab while it launches, then open the URL.
 6. Do it again from the AWS CLI and the EB CLI, and try the same image on Cluster Mode.

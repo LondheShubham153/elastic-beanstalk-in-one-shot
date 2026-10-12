@@ -26,10 +26,10 @@ Pick one way to run it: [Console](#run-it-with-the-console), [EB CLI](#run-it-wi
 1. Zip `index.php` and `health.php` so the files are at the top level of the archive.
 2. Elastic Beanstalk, **Create environment**, Standard, platform **PHP**, version PHP 8.2 on Amazon Linux 2023.
 3. Application code **Local file**, then choose the ZIP.
-4. Service access: pick `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`.
-5. Under capacity choose a single instance on `t3.micro`, then **Create environment**.
+4. Service access: as in [Project 1](project-1-single-tier.md#run-it-with-the-console), choose **Use another role** and pick `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`.
+5. Open **Infrastructure**, choose a single instance on `t3.micro`, then choose **Create**.
 
-The console steps were not hand-clicked for this guide.
+The wizard is the same as in Project 1, with the platform changed to PHP. I did not click through these steps for this guide.
 
 ## Run it with the EB CLI
 

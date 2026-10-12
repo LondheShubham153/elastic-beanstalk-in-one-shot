@@ -1,6 +1,6 @@
 # 3. Console tour and AWS/IAM setup
 
-Finish the [setup](../setup/README.md) and create the IAM roles first ([setup/iam-roles.md](../setup/iam-roles.md), about 2 minutes), then open Elastic Beanstalk. The Create environment page asks for these roles, and without them you have to leave halfway.
+Finish the [setup](../setup/README.md) and create the IAM roles first ([setup/iam-roles.md](../setup/iam-roles.md), about 2 minutes), then open Elastic Beanstalk. The Standard Mode wizard can create them for you with **Create default role**, but making them first is more reliable and the CLI routes need them.
 
 ## Order
 
@@ -15,7 +15,7 @@ Finish the [setup](../setup/README.md) and create the IAM roles first ([setup/ia
 |------|------------------|
 | Applications and environments | One row per environment, with its health color |
 | Create environment | Deployment mode (Standard or Cluster), environment tier, platform, application code |
-| Service access step | The service role and the EC2 instance profile from the setup page |
+| Service access step | The service role and the EC2 instance profile. Choose **Use another role** and pick the ones from the setup page, or keep **Create default role** |
 | Environment overview | Health, the running version, the URL |
 | Events | A running log of what Elastic Beanstalk is doing |
 | Configuration | The settings groups you change in chapter 5 |

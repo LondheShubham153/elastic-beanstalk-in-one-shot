@@ -58,7 +58,7 @@ Every project page has three ways to run each step: the console, the EB CLI and 
 1. Work through [setup/README.md](setup/README.md): AWS account, AWS CLI v2, EB CLI and the other tools, for macOS, Linux and Windows. It ends with a script that checks your machine.
 2. Create the two IAM roles that Standard Mode needs: [setup/iam-roles.md](setup/iam-roles.md). This takes about 2 minutes and you do it once per AWS account.
 3. Open Elastic Beanstalk and create your environment.
-4. On the Service access step, pick the two roles from step 2.
+4. On the Service access step, choose **Use another role** and pick the two roles from step 2.
 
 Every project deploys the same way: a public Docker Hub image and one small file.
 

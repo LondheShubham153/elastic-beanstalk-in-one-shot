@@ -36,10 +36,18 @@ curl -O https://raw.githubusercontent.com/LondheShubham153/e-commerce-github-act
 
 1. Open Elastic Beanstalk and choose **Create environment**.
 2. Deployment mode **Standard**. Give the application and environment a name.
-3. Platform **Docker**, on 64bit Amazon Linux 2023, recommended version.
+3. Platform **Docker**. The branch fills in as Docker running on 64bit Amazon Linux 2023, and the version as the recommended one.
 4. Application code **Local file**, then choose `docker-compose.yml`.
-5. Service access: pick `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`.
-6. Leave the rest at the defaults and choose **Create environment**.
+
+![Names, platform and application code in the Standard Mode wizard](../images/project1-console-create.png)
+
+5. Service access: for both the service role and the EC2 instance profile, choose **Use another role** and pick `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`. If you skipped the setup roles, leave **Create default role**, which makes roles with the same names.
+
+![The Service access step](../images/project1-console-service-access.png)
+
+6. Leave the rest at the defaults and choose **Create** at the bottom of the page.
+
+The two screenshots are the real wizard, filled in but not submitted, so I did not click **Create** in the console. The CLI routes below were run for real.
 
 When it finishes, the Environments list shows the new environment with health **Ok**:
 
@@ -53,7 +61,7 @@ The Configuration tab shows the platform, service access and environment propert
 
 ![The Configuration tab](../images/console-env-configuration.png)
 
-Console labels can differ slightly from this list. The console steps were not hand-clicked for this guide, while the two CLI routes below were run for real.
+Console labels can differ slightly from this list.
 
 ## Run it with the EB CLI
 

@@ -2,13 +2,15 @@
 
 This is the last step of the [setup](README.md). Do the tools and sign-in steps there first.
 
-Standard Mode needs two IAM roles in your AWS account before it can create an environment. Create them first, then open Elastic Beanstalk. If you open Elastic Beanstalk first, the Create environment page will ask you to pick these roles and you will have to leave halfway to make them.
+Standard Mode needs two IAM roles in your AWS account before it can create an environment. The simplest habit is to create them first, then open Elastic Beanstalk.
+
+The Standard Mode wizard can also make them for you. On its Service access step, both **Service role** and **EC2 instance profile** default to **Create default role**, which creates `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`, the same names used here. We still recommend creating them yourself first, for three reasons: the EB CLI and AWS CLI routes need the roles to exist already, you can see exactly what was created, and the wizard fails if your IAM user is not allowed to create roles. The Cluster Mode wizard has no default option. It asks you to choose its roles and sends you to IAM through **Create new role**.
 
 The order is:
 
 1. Create the two roles (this page, about 2 minutes).
 2. Open Elastic Beanstalk and create your environment.
-3. Pick the roles on the Service access step.
+3. On the Service access step, choose **Use another role** and pick the two roles, or leave **Create default role** if they already exist under the same names.
 
 You only do this once per AWS account. Cluster Mode uses its own roles, and the console selects those for you.
 
@@ -101,7 +103,11 @@ You should see two policies on the service role, three on the instance role, and
 
 ## Then open Elastic Beanstalk
 
-On the Service access step of Create environment, choose `aws-elasticbeanstalk-service-role` as the service role and `aws-elasticbeanstalk-ec2-role` as the EC2 instance profile.
+On the Service access step of Create environment, choose **Use another role** for both the service role and the EC2 instance profile, then pick `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`. The wizard offers **Create default role** first. If the two roles already exist with these names, you can leave that choice as it is.
+
+![The Service access step of the Standard Mode wizard](../images/project1-console-service-access.png)
+
+I looked at this step but did not create an environment through it, so I did not test what **Create default role** does when the roles already exist.
 
 ## Cleaning up
 
