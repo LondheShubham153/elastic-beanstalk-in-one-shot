@@ -33,7 +33,9 @@ The causes tell you why. We saw these in the test runs:
 
 ### Run it with the console
 
-Open the environment. The **Health** badge and the **Causes** list are on the overview. The **Health** tab shows each instance, its status, CPU, load average and request counts. Not hand-clicked.
+Open the environment. The **Health** badge is on the overview. The **Health & monitoring** tab lists each instance with its status, running time, deployment ID, request counts and response codes, with charts underneath.
+
+![The Health & monitoring tab](../images/ch8-health-monitoring.png)
 
 ### Run it with the EB CLI
 
@@ -92,7 +94,7 @@ aws cloudwatch get-metric-statistics --namespace AWS/EC2 --metric-name CPUUtiliz
   --period 60 --statistics Average --query 'Datapoints[-1].Average' --output text
 ```
 
-Our idle `t3.micro` instances sat around 0.6%. In the console, open the **Monitoring** tab to see the same graphs without commands. Not hand-clicked.
+Our idle `t3.micro` instances sat around 0.6%. In the console, open the **Health & monitoring** tab and look at the **Metrics** section for CPU utilization, network in and network out, without commands. The **Alarms** table below it is where you create an alarm.
 
 ## Logs
 
@@ -100,7 +102,11 @@ You can read logs without connecting to an instance.
 
 ### Run it with the console
 
-Open **Logs**, choose **Request logs**, then **Last 100 lines** or **Full logs**, and download the file. Not hand-clicked.
+Open the **Logs** tab, choose **Request logs**, then **Last 100 lines** or **Full**, and download the file.
+
+![The Request logs menu on the Logs tab](../images/ch8-request-logs.png)
+
+The same tab has an **Enable CloudWatch log streaming** button. I opened this page and the menu but did not download a log file in the console.
 
 ### Run it with the EB CLI
 
@@ -150,7 +156,7 @@ curl -s "<url from retrieve-environment-info>" | grep "ch5 demo hook"
 
 Our run printed `ch5 demo hook: postdeploy ran on ip-172-31-35-66...`.
 
-To keep logs after an instance is gone, turn on log streaming to CloudWatch Logs under **Configuration**, then **Updates, monitoring, and logging**. We did not test this.
+To keep logs after an instance is gone, turn on log streaming to CloudWatch Logs under **Configuration**, then **Monitoring and updates**, **Edit**, **Logging**, **Enable log streaming**. We did not test this for a Standard Mode environment. Cluster Mode sends application logs to CloudWatch on its own ([Project 2](../projects/project-2-two-tier.md#the-launch-fails-with-responsecodemismatch-500)).
 
 ## Managed platform updates
 
@@ -172,7 +178,9 @@ aws elasticbeanstalk describe-configuration-settings --application-name my-app -
 aws elasticbeanstalk describe-environment-managed-actions --environment-name my-env
 ```
 
-The settings were saved, and the list of managed actions was empty because no newer platform version was waiting. We did not wait for a real update. In the console this is under **Configuration**, then **Managed platform updates**.
+The settings were saved, and the list of managed actions was empty because no newer platform version was waiting. We did not wait for a real update. In the console, open **Configuration**, then **Monitoring and updates**, **Edit**, and tick **Enable managed updates** under **Managed updates**. The **Managed updates** tab then lists each update and its result. It starts empty, with a banner telling you updates are off.
+
+![The Managed updates tab before updates are enabled](../images/ch8-managed-updates.png)
 
 - An environment created through the API starts with managed updates off.
 - Managed updates need enhanced health. Switching to basic health with them on was refused with `Managed platform updates require enhanced health reporting`.
