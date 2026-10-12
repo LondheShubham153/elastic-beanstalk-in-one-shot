@@ -1,0 +1,6 @@
+services:
+  app:
+    image: trainwithshubham/e-commerce-python:1.1.0
+    ports:
+      - "80:8080"
+    restart: unless-stopped

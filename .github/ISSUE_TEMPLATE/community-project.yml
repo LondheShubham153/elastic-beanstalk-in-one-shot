@@ -1,0 +1,54 @@
+name: Community project
+description: Share an app you deployed on Elastic Beanstalk (#BuildOnElasticBeanstalk)
+title: "Community project: "
+labels: ["community-project"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: App name
+    validations:
+      required: true
+  - type: input
+    id: repo
+    attributes:
+      label: Public repo link
+      placeholder: https://github.com/you/your-repo
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options: [Standard, Cluster]
+    validations:
+      required: true
+  - type: dropdown
+    id: method
+    attributes:
+      label: Deployed with
+      options: [Console, EB CLI, AWS CLI, CI/CD pipeline]
+    validations:
+      required: true
+  - type: textarea
+    id: about
+    attributes:
+      label: What it does and how you deployed it
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot of the running app
+      description: Drag and drop the image here. Hide your AWS account ID and any secrets first.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: No access keys, passwords, tokens or AWS account ID in the screenshot or repo
+          required: true
+        - label: I terminated the environment and deleted the application
+          required: true
