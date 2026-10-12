@@ -138,6 +138,16 @@ On the RDS page, the **Security group rules** section now lists an inbound rule 
 
 ![The inbound rule on the database security group](../images/project2-rds-security-rule.png)
 
+**Using a database you already have?** Do the same thing for it. Find its security group, then add the rule for the environment's group:
+
+```bash
+aws rds describe-db-instances --db-instance-identifier <your-db> \
+  --query 'DBInstances[0].VpcSecurityGroups[].VpcSecurityGroupId' --output text
+aws ec2 authorize-security-group-ingress --group-id <that-group> --protocol tcp --port 3306 --source-group $ENVSG
+```
+
+An existing database often sits in the VPC's `default` security group, whose only inbound rule is from itself. That group does not let the environment in. See [the failed launch below](#the-launch-fails-with-targettimeout).
+
 ### 3. Create the environment
 
 **Run it with the console**
@@ -228,11 +238,53 @@ aws rds delete-db-subnet-group --db-subnet-group-name my-rds
 
 Terminate your Project 1 Cluster Mode environment too. The shared infrastructure goes up to 3 hours after the last Cluster Mode environment ends, and charges continue until then.
 
+## The launch fails with Target.Timeout
+
+**What you see.** The environment stays Grey, then ends in `Failed to launch environment`. The Events tab fills with a warning every few seconds:
+
+```
+targetGroupArn='...' has '1' unhealthy targets due to ['target='...' is in state='unhealthy' due to reason='Target.Timeout' description='Request timed out'']
+```
+
+followed by `Application failed to start within the expected time`, `Deployment failed, pending rollback` and `Rollback skipped as no previous successful deployment found`.
+
+**Why.** The load balancer checks `/` on your app, and the home page queries MySQL. If the app cannot reach the database, the query hangs until the check times out. The image, the service port and the other settings can all be right.
+
+The usual cause is the database security group. It has no inbound rule on port 3306 from the environment's security group (step 2). This was the exact cause when we looked at a real failed environment: the database was in the VPC `default` security group, with a single inbound rule from itself.
+
+**Check it.**
+
+```bash
+aws elasticbeanstalk describe-events --environment-name <your-env> --max-items 10 \
+  --query 'Events[].[Severity,Message]' --output text
+
+# the database's security group and its inbound rules
+DBSG=$(aws rds describe-db-instances --db-instance-identifier <your-db> \
+  --query 'DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId' --output text)
+aws ec2 describe-security-groups --group-ids $DBSG --query 'SecurityGroups[0].IpPermissions'
+
+# the environment's security group
+CLUSTER=$(aws eks list-clusters --query 'clusters[0]' --output text)
+aws eks describe-cluster --name $CLUSTER --query 'cluster.resourcesVpcConfig.clusterSecurityGroupId' --output text
+```
+
+If no inbound rule on port 3306 lists that last group, the database cannot be reached.
+
+**Fix it.** Add the rule from step 2, then recreate the environment, because a failed launch does not recover on its own. Terminate it and create it again, or choose **Rebuild environment** in the console.
+
+```bash
+aws ec2 authorize-security-group-ingress --group-id $DBSG --protocol tcp --port 3306 --source-group <environment-security-group>
+```
+
+Other things that give the same symptom: a wrong host name, user, password or database name in `env-variables`, or a database in a different VPC. Check those if the rule is already in place.
+
+I diagnosed this on a real failed environment. The rule command is the same one tested in step 2. I did not rebuild that environment to confirm it recovers.
+
 ## Common problems
 
 - `t3.micro` hangs on the MySQL plus Flask compose file. Use `t3.small`.
 - On Cluster Mode the service port must be 5000.
-- The RDS security group must allow the environment's security group on port 3306.
+- The RDS security group must allow the environment's security group on port 3306. If it does not, the launch fails with `Target.Timeout` ([details](#the-launch-fails-with-targettimeout)).
 - Use one `env-variables` JSON option on Cluster Mode, not one option per variable.
 - Never commit a real database password. The compose file's `change-me-...` values are placeholders.
 - On zsh (the macOS default), an unquoted `$SUBNETS` made up of several lines is not split into words. Pass it as JSON in quotes, as in step 1.
