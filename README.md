@@ -16,7 +16,7 @@
 
 This is the companion repo for the video **Amazon Elastic Beanstalk In One Shot | 3 Live DevOps Projects | Beginners to Advanced**. It holds the chapter notes, the commands (each one run on a real account) and the project steps, so you can follow along or work through it on your own.
 
-Elastic Beanstalk is a powerful PaaS on AWS. You bring the code (Java, .NET, Node.js, Python, PHP, Ruby, Go or Docker, no rewrite needed), and AWS handles provisioning, scaling, health monitoring, zero-downtime updates and automatic rollback.
+[Amazon Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) is a powerful PaaS on AWS. You bring the code (Java, .NET, Node.js, Python, PHP, Ruby, Go or Docker, no rewrite needed), and AWS handles provisioning, scaling, health monitoring, zero-downtime updates and automatic rollback.
 
 ```mermaid
 flowchart LR
