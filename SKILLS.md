@@ -79,6 +79,7 @@ Use the cleanup block on the page they followed. Order matters: terminate the en
 | `t3.micro` hangs or times out with MySQL and Flask in one compose file | Too little memory. Use `t3.small` or larger | Project 2 |
 | `delete-application` fails right after `terminate-environment` | Wait first: `aws elasticbeanstalk wait environment-terminated --environment-names <env>` | Project 1 |
 | Cluster Mode environment fails with `Target.Timeout`, then `Rollback skipped` | The database security group has no inbound rule on port 3306 from the environment's group. Add it, then rebuild | Project 2 |
+| Cluster Mode launch fails with `Target.ResponseCodeMismatch` and `[500]` | The app is reachable but errors on the database. Read the app log in CloudWatch (`/aws/elasticbeanstalk/application/logs`). `Unknown database` means the instance was created without `--db-name` | Project 2 |
 | Cluster Mode URL does not answer on `http://` | The load balancer is HTTPS only. Use `https://` | Project 1 |
 | Cluster Mode app unreachable on the wrong port | Set the service port to the port the app listens on (default 8080, Flask in Project 2 uses 5000) | Project 2 |
 | Cluster Mode rejects one option per variable | Pass all variables as one JSON option, `env-variables`, in `aws:elasticbeanstalk:eks:environment` | Project 2 |
@@ -97,7 +98,7 @@ Use the cleanup block on the page they followed. Order matters: terminate the en
 
 - **Region.** Commands were tested in `us-west-2`. Set `AWS_REGION` and the default region to match.
 - **Platform name.** Examples use `64bit Amazon Linux 2023 v4.13.10 running Docker`. The version changes. List the current ones with `aws elasticbeanstalk list-available-solution-stacks`.
-- **Roles.** Standard Mode needs `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`. Cluster Mode uses its own roles, which the console creates for you.
+- **Roles.** Standard Mode needs `aws-elasticbeanstalk-service-role` and `aws-elasticbeanstalk-ec2-role`. The Standard wizard can create them (**Create default role**), but the EB CLI and AWS CLI routes need them to exist first. Cluster Mode uses three of its own roles, which you pick or create in its wizard.
 - **Legacy platforms.** PHP 8.2 was the oldest PHP version we could create. Platform branches retire on published dates, so check the legacy page before promising long-term support.
 - **Docker images.** Build for amd64, and for arm64 too if people use Apple silicon, or the instance cannot run the image. Pin the tag instead of `latest`.
 - **Shell.** The commands are bash-style. On Windows, use WSL 2 or Git Bash, not PowerShell.
