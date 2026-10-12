@@ -270,7 +270,7 @@ aws eks describe-cluster --name $CLUSTER --query 'cluster.resourcesVpcConfig.clu
 
 If no inbound rule on port 3306 lists that last group, the database cannot be reached.
 
-**Fix it.** Add the rule from step 2, then recreate the environment, because a failed launch does not recover on its own. Terminate it and create it again, or choose **Rebuild environment** in the console.
+**Fix it.** Add the rule from step 2, then deploy again (see [Deploy again after a fix](#deploy-again-after-a-fix)).
 
 ```bash
 aws ec2 authorize-security-group-ingress --group-id $DBSG --protocol tcp --port 3306 --source-group <environment-security-group>
@@ -304,11 +304,7 @@ aws logs get-log-events --log-group-name /aws/elasticbeanstalk/application/logs 
 
 Stream names start with `eb-<your-environment>`. In the console, open **CloudWatch**, then **Log groups**, then `/aws/elasticbeanstalk/application/logs`.
 
-**The one we saw.** The last line was `pymysql.err.OperationalError: (1049, "Unknown database 'devops'")`. The connection and login worked, so the network was fine, but the database instance had been created without an initial database. Step 1 avoids this with `--db-name devops`. RDS cannot add an initial database name afterwards, so connect to the instance from a machine inside the VPC and create it:
-
-```sql
-CREATE DATABASE devops;
-```
+**The one we saw.** The last line was `pymysql.err.OperationalError: (1049, "Unknown database 'devops'")`. The connection and login worked, so the network was fine, but the database instance had been created without an initial database. Step 1 avoids this with `--db-name devops`. RDS cannot add an initial database name afterwards, so create it by connecting to the instance from a machine inside the VPC. [The next section](#create-the-missing-database) shows how.
 
 Other messages and what they mean:
 
@@ -319,11 +315,100 @@ Other messages and what they mean:
 | `(2005, "Unknown MySQL server host ...")` | Wrong `MYSQL_HOST` |
 | `(1049, "Unknown database ...")` | The database does not exist on the instance |
 
+## Create the missing database
+
+The database instance is private, so you cannot reach it from your laptop. Run the SQL from a small throwaway EC2 instance inside the same VPC, then delete the instance. This is the method that fixed a real failed environment.
+
+You need the database host, user and password (the values in your `env-variables`), and the database's security group. The helper must be allowed to reach port 3306. The simplest way is to launch it in the database's own security group, which works when that group has an inbound rule from itself (the VPC `default` group does). Otherwise add a temporary 3306 rule for the helper's group.
+
+```bash
+export AWS_REGION=us-west-2
+DBHOST=<your-db-endpoint>
+DBUSER=<your-db-user>
+DBPASS=<your-db-password>
+DBNAME=devops
+DBSG=<the-database-security-group>
+VPC=<the-database-vpc>
+
+AMI=$(aws ssm get-parameter --name /aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id \
+  --query Parameter.Value --output text)
+SUBNET=$(aws ec2 describe-subnets --filters Name=vpc-id,Values=$VPC Name=default-for-az,Values=true \
+  --query 'Subnets[0].SubnetId' --output text)
+
+cat > userdata.sh <<SCRIPT
+#!/bin/bash
+exec > /var/log/fixdb.log 2>&1
+apt-get update -qq
+DEBIAN_FRONTEND=noninteractive apt-get install -y -qq mysql-client-core-8.0
+echo "=== BEFORE"
+MYSQL_PWD='$DBPASS' mysql -h $DBHOST -u $DBUSER -e "SHOW DATABASES;"
+MYSQL_PWD='$DBPASS' mysql -h $DBHOST -u $DBUSER -e "CREATE DATABASE IF NOT EXISTS $DBNAME;"
+echo "=== AFTER"
+MYSQL_PWD='$DBPASS' mysql -h $DBHOST -u $DBUSER -e "SHOW DATABASES;"
+echo "=== DONE"
+cat /var/log/fixdb.log > /dev/console
+SCRIPT
+
+IID=$(aws ec2 run-instances --image-id $AMI --instance-type t3.micro --subnet-id $SUBNET \
+  --security-group-ids $DBSG --associate-public-ip-address --user-data file://userdata.sh \
+  --metadata-options HttpTokens=required \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=fix-db-temp}]' \
+  --query 'Instances[0].InstanceId' --output text)
+```
+
+The instance writes its result to the EC2 console output. After about two minutes:
+
+```bash
+aws ec2 get-console-output --instance-id $IID --latest --output text --query Output \
+  | sed -n '/=== BEFORE/,/=== DONE/p'
+```
+
+You should see the database list before and after, with your database name in the second list. Then delete the helper and the file that held the password:
+
+```bash
+aws ec2 terminate-instances --instance-ids $IID
+rm userdata.sh
+```
+
+The password sits in the instance's user data for the minutes it runs, so use this only with a password you can change, and delete the instance right away. If you would rather keep the password out of user data, connect with the `mysql` client from a bastion host or an existing instance in the VPC instead.
+
+## Deploy again after a fix
+
+After you fix the security group or the database, the failed environment does not retry by itself. Rebuild is not available for Cluster Mode environments (the `RebuildEnvironment` call returns an error), and deploying the same version label again does nothing: the update completes in a second and the environment stays Grey. Deploy a new version label that points at the same image instead:
+
+```bash
+aws elasticbeanstalk create-application-version --application-name <your-app> \
+  --version-label retry-1 --image-configuration Source={Uri=trainwithshubham/two-tier-flask-app:1.0.0}
+aws elasticbeanstalk update-environment --environment-name <your-env> --version-label retry-1
+```
+
+Check it:
+
+```bash
+aws elasticbeanstalk describe-events --environment-name <your-env> --max-items 5 \
+  --query 'Events[].Message' --output text
+curl -s -o /dev/null -w "%{http_code}\n" https://<your-environment-cname>/health
+```
+
+The events should show `Deployment passed health checks` and `Environment update completed successfully`, and `/health` and `/` return 200. In the real case this took about 90 seconds. The health colour can stay Grey with `No Data` until the environment has seen some traffic. Terminating the environment and creating it again also works, but you do not need to.
+
+## What went wrong in the real case
+
+One environment hit both problems in a row, which is why this page has both sections:
+
+| Step | What we saw | What we did |
+|------|-------------|-------------|
+| 1 | `Target.Timeout`. The environment never became healthy | Added an inbound 3306 rule from the environment's group on the database's security group |
+| 2 | `Target.ResponseCodeMismatch` with `[500]`. The app log said `Unknown database 'devops'` | Created the database from a helper instance, then terminated the helper |
+| 3 | Deploying the same version again did nothing, and Rebuild was refused | Deployed a new version label with the same image |
+| 4 | `Deployment passed health checks`, and `/health` and `/` returned 200 | Done |
+
 ## Common problems
 
 - `t3.micro` hangs on the MySQL plus Flask compose file. Use `t3.small`.
 - On Cluster Mode the service port must be 5000.
 - The RDS security group must allow the environment's security group on port 3306. If it does not, the launch fails with `Target.Timeout` ([details](#the-launch-fails-with-targettimeout)).
+- A failed Cluster Mode environment does not retry on its own, and Rebuild is not available for it. Deploy a new version label with the same image ([how](#deploy-again-after-a-fix)).
 - Create the database with `--db-name devops` in step 1. Without it the app returns 500 and the log says `Unknown database` ([details](#the-launch-fails-with-responsecodemismatch-500)).
 - Use one `env-variables` JSON option on Cluster Mode, not one option per variable.
 - Never commit a real database password. The compose file's `change-me-...` values are placeholders.

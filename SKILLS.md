@@ -78,7 +78,8 @@ Use the cleanup block on the page they followed. Order matters: terminate the en
 |---------|---------------|-------|
 | `t3.micro` hangs or times out with MySQL and Flask in one compose file | Too little memory. Use `t3.small` or larger | Project 2 |
 | `delete-application` fails right after `terminate-environment` | Wait first: `aws elasticbeanstalk wait environment-terminated --environment-names <env>` | Project 1 |
-| Cluster Mode environment fails with `Target.Timeout`, then `Rollback skipped` | The database security group has no inbound rule on port 3306 from the environment's group. Add it, then rebuild | Project 2 |
+| Cluster Mode environment fails with `Target.Timeout`, then `Rollback skipped` | The database security group has no inbound rule on port 3306 from the environment's group. Add it, then deploy a new version label with the same image | Project 2 |
+| Cluster Mode environment stays failed after you fixed the cause | Rebuild is not available for it, and deploying the same version label again does nothing. Create a new version label with the same image, then `update-environment` to it | Project 2 |
 | Cluster Mode launch fails with `Target.ResponseCodeMismatch` and `[500]` | The app is reachable but errors on the database. Read the app log in CloudWatch (`/aws/elasticbeanstalk/application/logs`). `Unknown database` means the instance was created without `--db-name` | Project 2 |
 | Cluster Mode URL does not answer on `http://` | The load balancer is HTTPS only. Use `https://` | Project 1 |
 | Cluster Mode app unreachable on the wrong port | Set the service port to the port the app listens on (default 8080, Flask in Project 2 uses 5000) | Project 2 |
