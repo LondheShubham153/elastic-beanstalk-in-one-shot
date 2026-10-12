@@ -50,6 +50,7 @@ Every project page has three ways to run each step: the console, the EB CLI and 
 | Follow the video | The [chapter list](#chapters) below |
 | Learn deployment strategies, scaling, monitoring | Chapters [5](notes/05-environments-config.md) to [8](notes/08-observability.md) |
 | Show what I built (#BuildOnElasticBeanstalk) | [Community Projects](community/README.md) |
+| Use this repo with an AI assistant | [SKILLS.md](SKILLS.md) |
 | Avoid a surprise bill | [Cleanup and cost](notes/14-cleanup-and-cost.md) |
 
 ## Start here: the order to follow
