@@ -1,6 +1,6 @@
 # Community Projects
 
-Built something on Elastic Beanstalk? Add it here. This page is a showcase of what learners from the TrainWithShubham community deployed, with a screenshot of each running app and a link to its code.
+Built something on Elastic Beanstalk? Add it here. The [showcase](showcase.md) lists what learners from the TrainWithShubham community deployed, with a link to each repo. Your entry needs a screenshot of the app running and a link to your code.
 
 It also doubles as your entry for **#BuildOnElasticBeanstalk**. Check the video description for the current hackathon rules and dates.
 
@@ -52,6 +52,9 @@ A maintainer checks each submission for secrets, account IDs and a working repo 
 
 ## Showcase
 
-| App | By | Deployed with | Repo |
-|-----|----|---------------|------|
-| _Your project could be first._ | | | |
+27 community projects are listed in the **[Showcase](showcase.md)**, grouped by theme, with links to each repo and the builder's LinkedIn posts. Add yours with the steps above.
+
+## More for builders
+
+- [Project ideas](project-ideas.md): five levels, from a first deploy to platform tooling
+- [Add it to your resume](add-to-resume.md): bullets, LinkedIn post template and a repo checklist
