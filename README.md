@@ -9,7 +9,7 @@
   <img alt="Tested on real AWS" src="https://img.shields.io/badge/tested%20on-real%20AWS%20(us--west--2)-232F3E?style=flat-square">
   <img alt="Level" src="https://img.shields.io/badge/level-beginner%20to%20advanced-2ea44f?style=flat-square">
   <img alt="Projects" src="https://img.shields.io/badge/guided%20projects-4-0969da?style=flat-square">
-  <img alt="Community projects" src="https://img.shields.io/badge/community%20projects-27-FF9900?style=flat-square">
+  <img alt="Community projects" src="https://img.shields.io/badge/community%20projects-28-FF9900?style=flat-square">
   <img alt="License" src="https://img.shields.io/badge/license-MIT-2ea44f?style=flat-square">
 </p>
 
@@ -80,7 +80,7 @@ You need an AWS account, AWS CLI v2, the EB CLI (`awsebcli`), Python 3, Git, cur
 
 ## Community
 
-27 builders deployed their own apps for **#BuildOnElasticBeanstalk**: incident platforms, FinOps dashboards, AI helpers and civic tools. Browse them in the [showcase](community/showcase.md), then [add yours](community/README.md#how-to-submit).
+28 builders deployed their own apps for **#BuildOnElasticBeanstalk**: incident platforms, FinOps dashboards, AI helpers and civic tools. Browse them in the [showcase](community/showcase.md), then [add yours](community/README.md#how-to-submit).
 
 | | |
 |---|---|

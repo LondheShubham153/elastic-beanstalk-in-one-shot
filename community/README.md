@@ -52,7 +52,7 @@ A maintainer checks each submission for secrets, account IDs and a working repo 
 
 ## Showcase
 
-27 community projects are listed in the **[Showcase](showcase.md)**, grouped by theme, with links to each repo and the builder's LinkedIn posts. Add yours with the steps above.
+28 community projects are listed in the **[Showcase](showcase.md)**, grouped by theme, with links to each repo and the builder's LinkedIn posts. Add yours with the steps above.
 
 ## More for builders
 

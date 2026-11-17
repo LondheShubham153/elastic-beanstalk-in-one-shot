@@ -1,14 +1,16 @@
 # FlowTrack Habit_Task_Tracker_App
 #BuildOnElasticBeanstalk
 
-![Screenshot of the running app](images/kshitij9896/Habit_Task_Tracker_App1.png) ||
-![Screenshot of the running app](images/kshitij9896/Habit_Task_Tracker_App2.png) ||
-![Screenshot of the running app](images/kshitij9896/Habit_Task_Tracker_App3.png) 
+![Screenshot of the running app](images/Habit_Task_Tracker_App1.png) 
+
+![Screenshot of the running app](images/Habit_Task_Tracker_App2.png) 
+
+![Screenshot of the running app](images/Habit_Task_Tracker_App3.png) 
 
 
 | | |
 |---|---|
-| Built by | [kshitij9896] https://github.com/kshitij9896 |
+| Built by | [@kshitij9896](https://github.com/kshitij9896) |
 | Repo | https://github.com/kshitij9896/Habit_Task_Tracker_App |
 | Platform | Docker  |
 | Mode | Standard |

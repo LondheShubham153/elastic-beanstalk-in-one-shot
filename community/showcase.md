@@ -1,12 +1,12 @@
 # Showcase: what the community built
 
-27 builders deployed their own apps on Elastic Beanstalk for the **#BuildOnElasticBeanstalk** hackathon. Each one took an idea to Elastic Beanstalk, and many added a database, a pipeline or an AI feature on top. Click a project to read the code, and open the post links to see the builder's own write-up on LinkedIn.
+28 builders deployed their own apps on Elastic Beanstalk for the **#BuildOnElasticBeanstalk** hackathon. Each one took an idea to Elastic Beanstalk, and many added a database, a pipeline or an AI feature on top. Click a project to read the code, and open the post links to see the builder's own write-up on LinkedIn.
 
 Only public information is listed here: the name each builder shared, their public GitHub repo and their public LinkedIn posts. Want yours added or changed? See [how to submit](README.md#how-to-submit).
 
 ## Browse by theme
 
-[DevOps tooling](#devops-tooling) · [Reliability and incidents](#reliability-and-incidents) · [Observability](#observability) · [FinOps](#finops) · [AI and security](#ai-and-security) · [AI and automation](#ai-and-automation) · [Civic tech](#civic-tech)
+[DevOps tooling](#devops-tooling) · [Reliability and incidents](#reliability-and-incidents) · [Observability](#observability) · [FinOps](#finops) · [AI and security](#ai-and-security) · [AI and automation](#ai-and-automation) · [Civic tech](#civic-tech) · [Productivity](#productivity)
 
 ## DevOps tooling
 
@@ -69,6 +69,12 @@ Only public information is listed here: the name each builder shared, their publ
 | **[Saathi](https://github.com/Niti9331/saathi_awsbeanstalk_hackathon)** | Nitisha manglik ([@Niti9331](https://github.com/Niti9331)) | Privacy-first guide to free mental health helplines in six Indian languages. No login and no stored user data. | [1](https://lnkd.in/p/gEdabqWS) [2](https://lnkd.in/p/gnHrgmBx) [3](https://lnkd.in/p/gbmmk5XC) |
 | **ConfirmRoute**<br>repo not public yet | Arun Gupta ([@arungupta1526](https://github.com/arungupta1526)) | See the posts for details. | [1](https://lnkd.in/p/gkSTCbuC) [2](https://lnkd.in/p/gaZYFau4) |
 | **SmartSOS Starter**<br>repo not public yet | Soham Sanjay Dhadve ([@sohamdhadve102002](https://github.com/sohamdhadve102002)) | See the posts for details. | [1](https://lnkd.in/p/dZp97fkq) [2](https://lnkd.in/p/d_Rv4FYP) [3](https://lnkd.in/p/drcJGD-t) [4](https://lnkd.in/p/dXC8RW3U) |
+
+## Productivity
+
+| Project | Built by | What it does | Posts |
+|---|---|---|---|
+| **[FlowTrack](https://github.com/kshitij9896/Habit_Task_Tracker_App)**<br>[screenshots and write-up](projects/kshitij9896_Habit_Task_Tracker_App.md) | [@kshitij9896](https://github.com/kshitij9896) | Dark-mode habit and task tracker with a live progress bar. Node.js, Express and Docker, deployed from a Docker Hub image through the console in Standard Mode. | - |
 
 ## Learn from these builds
 
