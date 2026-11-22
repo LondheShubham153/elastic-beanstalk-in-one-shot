@@ -15,7 +15,13 @@
 
 [Amazon Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) is a powerful PaaS on AWS. You bring the code (Java, .NET, Node.js, Python, PHP, Ruby, Go or Docker, no rewrite needed) and AWS handles provisioning, scaling, health monitoring, zero-downtime updates and automatic rollback.
 
-This repo is the companion to the video **Amazon Elastic Beanstalk In One Shot | 3 Live DevOps Projects | Beginners to Advanced**. Every command was run on a real account, so you can follow along or work at your own pace.
+This repo is the companion to the video **[Amazon Elastic Beanstalk In One Shot | 3 DevOps Projects (Notes Included)](https://www.youtube.com/watch?v=ZUUjM2swh4M)** on the [TrainWithShubham](https://www.youtube.com/@TrainWithShubham) YouTube channel. Every command was run on a real account, so you can follow along or work at your own pace.
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=ZUUjM2swh4M">
+    <img src="https://i.ytimg.com/vi/ZUUjM2swh4M/hqdefault.jpg" alt="Watch Amazon Elastic Beanstalk In One Shot on YouTube" width="480">
+  </a>
+</p>
 
 ```mermaid
 flowchart LR
@@ -29,7 +35,7 @@ flowchart LR
 | I want to | Go to |
 |---|---|
 | Deploy my first app | [Setup](setup/README.md), then [Project 1](projects/project-1-single-tier.md) |
-| Follow the video | [Chapters](#chapters) |
+| Watch the video | [YouTube](https://www.youtube.com/watch?v=ZUUjM2swh4M), then the [chapters](#chapters) |
 | Look up a command | [Cheatsheet](notes/cheatsheet.md) |
 | Avoid a surprise bill | [Cleanup and cost](notes/14-cleanup-and-cost.md) |
 | Get an idea for my own project | [Project ideas](community/project-ideas.md) |
@@ -87,6 +93,19 @@ You need an AWS account, AWS CLI v2, the EB CLI (`awsebcli`), Python 3, Git, cur
 | [Showcase](community/showcase.md) | Every project, with the builder, the repo and their LinkedIn posts |
 | [Project ideas](community/project-ideas.md) | Five levels, from a first deploy to platform tooling |
 | [Add it to your resume](community/add-to-resume.md) | Bullets, a LinkedIn post template and a repo checklist |
+
+## References
+
+| Resource | Link |
+|---|---|
+| Video: Elastic Beanstalk In One Shot | [YouTube](https://www.youtube.com/watch?v=ZUUjM2swh4M) |
+| More DevOps videos | [TrainWithShubham on YouTube](https://www.youtube.com/@TrainWithShubham) |
+| Elastic Beanstalk product page | [aws.amazon.com/elasticbeanstalk](https://aws.amazon.com/elasticbeanstalk/) |
+| Developer guide | [AWS documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html) |
+| EB CLI guide | [AWS documentation](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3.html) |
+| Pricing | [aws.amazon.com/elasticbeanstalk/pricing](https://aws.amazon.com/elasticbeanstalk/pricing/) |
+| Community projects | [Showcase](community/showcase.md) |
+| Resume and LinkedIn tips | [Add it to your resume](community/add-to-resume.md) |
 
 ## Contributing
 
